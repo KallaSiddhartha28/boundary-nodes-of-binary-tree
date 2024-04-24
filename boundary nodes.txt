@@ -1,0 +1,78 @@
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def find_left_boundary(root, result):
+    if not root or (not root.left and not root.right):
+        return
+    
+    result.append(root.val)
+    
+    if root.left:
+        find_left_boundary(root.left, result)
+    else:
+        find_left_boundary(root.right, result)
+
+def find_right_boundary(root, result):
+    if not root or (not root.left and not root.right):
+        return
+    
+    if root.right:
+        find_right_boundary(root.right, result)
+    else:
+        find_right_boundary(root.left, result)
+    
+    result.append(root.val)
+
+def find_leaves(root, result):
+    if not root:
+        return
+    
+    if not root.left and not root.right:
+        result.append(root.val)
+        return
+    
+    find_leaves(root.left, result)
+    find_leaves(root.right, result)
+
+def find_boundary_nodes(root):
+    if not root:
+        return []
+    
+    boundary_nodes = [root.val]
+    
+    # Find left boundary nodes (excluding the root if it's a leaf node)
+    if root.left:
+        find_left_boundary(root.left, boundary_nodes)
+    
+    # Find leaf nodes
+    find_leaves(root, boundary_nodes)
+    
+    # Find right boundary nodes (excluding the root if it's a leaf node)
+    if root.right:
+        find_right_boundary(root.right, boundary_nodes)
+    
+    return boundary_nodes
+
+# Example usage:
+# Constructing a binary tree (you can modify this part based on your tree structure)
+"""
+       1
+      / \
+     2   3
+    / \ / \
+   4  5 6  7
+"""
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
+root.right.left = TreeNode(6)
+root.right.right = TreeNode(7)
+
+# Find and print the boundary nodes
+boundary_nodes = find_boundary_nodes(root)
+print("Boundary Nodes:", boundary_nodes)
